@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio Batch Cropper</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎵 Audio Batch Cropper</h1>
+            <p>Remove switch noise and split audio files into clockwise/anticlockwise segments</p>
+        </header>
+
+        <div id="upload-section" class="section">
+            <h2>📁 Upload Audio Files</h2>
+            <div class="upload-area" id="upload-area">
+                <input type="file" id="file-input" multiple accept=".wav,.mp3,.flac,.aac">
+                <div class="upload-text">
+                    <span>Click to select files or drag & drop</span>
+                    <small>Supported: WAV, MP3, FLAC, AAC (12 seconds each)</small>
+                </div>
+            </div>
+            <button id="upload-btn" class="btn-primary" style="display: none;">Upload & Process</button>
+        </div>
+
+        <div id="results-section" class="section" style="display: none;">
+            <h2>📊 Detection Results</h2>
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <span>Processing files...</span>
+            </div>
+            
+            <div id="results-content" style="display: none;">
+                <div class="summary-card">
+                    <h3>Weighted Average Interval</h3>
+                    <div class="interval-display">
+                        <span id="avg-interval">5.5s - 6.5s</span>
+                    </div>
+                    <button id="proceed-btn" class="btn-primary">Proceed with This Interval</button>
+                </div>
+
+                <div class="table-container">
+                    <table id="results-table">
+                        <thead>
+                            <tr>
+                                <th>File Name</th>
+                                <th>Duration</th>
+                                <th>Detected Start</th>
+                                <th>Detected End</th>
+                                <th>Interval Length</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="viewer-section" class="section" style="display: none;">
+            <h2>🔍 Spectrogram Viewer</h2>
+            
+            <div class="viewer-controls">
+                <div class="file-nav">
+                    <button id="prev-file" class="btn-secondary">← Previous</button>
+                    <select id="file-selector">
+                        <option value="">Select file...</option>
+                    </select>
+                    <button id="next-file" class="btn-secondary">Next →</button>
+                </div>
+                
+                <div class="interval-controls">
+                    <label>Start: <input type="number" id="start-input" step="0.1" min="0" max="12"></label>
+                    <label>End: <input type="number" id="end-input" step="0.1" min="0" max="12"></label>
+                    <button id="apply-batch" class="btn-success">Apply to Batch</button>
+                </div>
+            </div>
+
+            <div id="spectrogram-container">
+                <div id="spectrogram-plot"></div>
+                <div id="spec-loading" class="loading" style="display: none;">
+                    <div class="spinner"></div>
+                    <span>Loading spectrogram...</span>
+                </div>
+            </div>
+        </div>
+
+        <div id="processing-section" class="section" style="display: none;">
+            <h2>⚙️ Processing Batch</h2>
+            <div id="batch-loading" class="loading">
+                <div class="spinner"></div>
+                <span>Processing audio files...</span>
+            </div>
+            
+            <div id="processing-results" style="display: none;">
+                <div class="success-card">
+                    <h3>✅ Processing Complete!</h3>
+                    <p>Successfully processed <span id="processed-count">0</span> files</p>
+                    <a id="download-link" href="#" class="btn-success">Download ZIP</a>
+                </div>
+            </div>
+        </div>
+
+        <div id="error-section" class="section error-section" style="display: none;">
+            <h3>❌ Error</h3>
+            <p id="error-message"></p>
+            <button id="restart-btn" class="btn-secondary">Start Over</button>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
